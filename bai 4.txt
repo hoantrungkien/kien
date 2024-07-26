@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Quản lý điện thoại</h1>
+<button id="addPhoneButton">Thêm điện thoại mới</button>
+<h2>Danh sách điện thoại:</h2>
+<table id="phoneTable">
+    <thead>
+    <tr>
+        <th>Mã điện thoại</th>
+        <th>Tên</th>
+        <th>Hãng sản xuất</th>
+        <th>Giá</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Danh sách điện thoại sẽ được thêm vào đây -->
+    </tbody>
+</table>
+
+<script>
+    class Phone {
+        constructor(code, name, manufacturer, price) {
+            this.code = code; // Mã điện thoại
+            this.name = name; // Tên điện thoại
+            this.manufacturer = manufacturer; // Hãng sản xuất
+            this.price = price; // Giá
+        }
+
+        toString() {
+            return `<tr>
+                            <td>${this.code}</td>
+                            <td>${this.name}</td>
+                            <td>${this.manufacturer}</td>
+                            <td>${this.price.toLocaleString()} VNĐ</td>
+                        </tr>`;
+        }
+    }
+
+    class PhoneManager {
+        constructor() {
+            this.phones = [];
+        }
+
+        addPhone(phone) {
+            this.phones.push(phone);
+            this.displayPhones();
+        }
+
+        displayPhones() {
+            const phoneTableBody = document.querySelector('#phoneTable tbody');
+            phoneTableBody.innerHTML = ''; // Xóa bảng cũ
+            const sortedPhones = this.phones.sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedPhones.forEach(phone => {
+                phoneTableBody.innerHTML += phone.toString();
+            });
+        }
+
+        addNewPhone() {
+            const code = prompt("Nhập mã điện thoại:");
+            const name = prompt("Nhập tên điện thoại:");
+            const manufacturer = prompt("Nhập hãng sản xuất:");
+            const price = parseFloat(prompt("Nhập giá điện thoại:"));
+
+            if (!code || !name || !manufacturer || isNaN(price) || price <= 0) {
+                alert("Vui lòng nhập đầy đủ thông tin chính xác!");
+                return;
+            }
+
+            const newPhone = new Phone(code, name, manufacturer, price);
+            this.addPhone(newPhone);
+            alert("Điện thoại đã được thêm thành công!");
+        }
+    }
+    const phoneManager = new PhoneManager();
+    phoneManager.addPhone(new Phone("001", "IPhone X", "Apple", 10000000));
+    phoneManager.addPhone(new Phone("002", "Galaxy S22", "Samsung", 25000000))
+    phoneManager.addPhone(new Phone("003", "Pixel 7", "Google", 20000000));
+    document.getElementById("addPhoneButton").addEventListener("click", () => {
+        phoneManager.addNewPhone();
+    });
+    phoneManager.displayPhones();
+</script>
+</body>
+</html>
